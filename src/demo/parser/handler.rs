@@ -105,7 +105,13 @@ impl<'a, T: MessageHandler> DemoHandler<'a, T> {
                 //self.tick = packet.tick;
                 for message in packet.messages {
                     match message {
-                        Message::NetTick(message) => self.tick = message.tick,
+                        Message::NetTick(message) => {
+                            eprintln!("@@ The current tick is now: {}", message.tick);
+                            if message.tick - self.tick > 1 {
+                                eprintln!("@@@@ Multiple ticks passed since the last NetTickMessage!");
+                            }
+                            self.tick = message.tick
+                        }
                         Message::CreateStringTable(message) => {
                             self.handle_string_table(message.table)
                         }
